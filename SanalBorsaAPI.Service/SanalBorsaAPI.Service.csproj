@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SanalBorsaAPI.Core\SanalBorsaAPI.Core.csproj" />
+    <ProjectReference Include="..\SanalBorsaAPI.Data\SanalBorsaAPI.Data.csproj" />
+  </ItemGroup>
+
+</Project>
