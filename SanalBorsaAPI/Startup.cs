@@ -8,7 +8,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using SanalBorsaAPI.Core.Repositories;
+using SanalBorsaAPI.Core.Services;
+using SanalBorsaAPI.Core.UnitOfWorks;
 using SanalBorsaAPI.Data;
+using SanalBorsaAPI.Data.Repositories;
+using SanalBorsaAPI.Data.UnitOfWorks;
+using SanalBorsaAPI.Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +41,9 @@ namespace SanalBorsaAPI
                     o.MigrationsAssembly("SanalBorsaAPI.Data");
                 });
             });
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IService<>), typeof(Service<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
