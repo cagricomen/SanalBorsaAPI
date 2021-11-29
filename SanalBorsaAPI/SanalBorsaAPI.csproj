@@ -18,8 +18,4 @@
     <ProjectReference Include="..\SanalBorsaAPI.Service\SanalBorsaAPI.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
