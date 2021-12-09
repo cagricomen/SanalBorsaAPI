@@ -1,31 +1,32 @@
-﻿using SanalBorsaAPI.Core.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using SanalBorsaAPI.Core.Repositories;
 using SanalBorsaAPI.Core.Services;
 using SanalBorsaAPI.Core.UnitOfWorks;
+using SanalBorsaAPI.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SanalBorsaAPI.Service.Services
 {
     public class Service<TEntity> : IService<TEntity> where TEntity : class
     {
-        public readonly IUnitOfWork _unitOfWork;
+        protected readonly DbContext _context;
         private readonly IRepository<TEntity> _repository;
 
-        public Service(IUnitOfWork unitOfWork, IRepository<TEntity> repository)
+        public Service(AppDbContext context, IRepository<TEntity> repository)
         {
-            _unitOfWork = unitOfWork;
+            _context = context;
             _repository = repository;
         }
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             await _repository.AddAsync(entity);
-
-            await _unitOfWork.CommitAsync();
-
+            
             return entity;
         }
 
@@ -43,7 +44,6 @@ namespace SanalBorsaAPI.Service.Services
         {
             _repository.Remove(entity);
 
-            _unitOfWork.Commit();
         }
 
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
@@ -55,7 +55,6 @@ namespace SanalBorsaAPI.Service.Services
         {
             TEntity updateEntity = _repository.Update(entity);
 
-            _unitOfWork.Commit();
 
             return updateEntity;
         }
@@ -64,5 +63,6 @@ namespace SanalBorsaAPI.Service.Services
         {
             return await _repository.Where(predicate);
         }
+       
     }
 }

@@ -55,5 +55,6 @@ namespace SanalBorsaAPI.Data.Repositories
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
+        
     }
 }

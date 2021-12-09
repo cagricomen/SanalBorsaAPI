@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Quartz" Version="3.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SanalBorsaAPI.Core\SanalBorsaAPI.Core.csproj" />
     <ProjectReference Include="..\SanalBorsaAPI.Data\SanalBorsaAPI.Data.csproj" />
   </ItemGroup>

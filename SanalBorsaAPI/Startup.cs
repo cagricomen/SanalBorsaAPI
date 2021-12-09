@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Quartz;
 using SanalBorsaAPI.Core.Repositories;
 using SanalBorsaAPI.Core.Services;
 using SanalBorsaAPI.Core.UnitOfWorks;
@@ -44,6 +45,17 @@ namespace SanalBorsaAPI
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IService<>), typeof(Service<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionJobFactory();
+                var jobKey = new JobKey("Gold Key");
+                q.AddJob<QuartzCrud>(opts => opts.WithIdentity(jobKey));
+                q.AddTrigger(opts => opts
+                    .ForJob(jobKey)
+                    .WithIdentity("Gold Key Trigger")
+                    .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+            });
+            services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
