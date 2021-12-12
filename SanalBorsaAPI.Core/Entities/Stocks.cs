@@ -10,6 +10,7 @@ namespace SanalBorsaAPI.Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string ShortName { get; set; }
         public decimal LastPrice { get; set; }
         public decimal HighestPrice { get; set; }
         public decimal LowestPrice { get; set; }

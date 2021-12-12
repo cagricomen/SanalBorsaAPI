@@ -23,6 +23,7 @@ namespace SanalBorsaAPI.Data.Repositories
         public async Task AddAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate)
@@ -50,9 +51,9 @@ namespace SanalBorsaAPI.Data.Repositories
            return await _dbSet.SingleOrDefaultAsync(predicate);
         }
 
-        public TEntity Update(TEntity entity)
+        public  TEntity Update(TEntity entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+             _context.SaveChanges();
             return entity;
         }
         

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SanalBorsaAPI.Core.Entities;
+using SanalBorsaAPI.Core.Repositories;
 using SanalBorsaAPI.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace SanalBorsaAPI.Controllers
     [ApiController]
     public class GoldenController : ControllerBase
     {
-        private readonly IService<Golden> _service;
-        public GoldenController(IService<Golden> service)
+        private readonly IRepository<Golden> _service;
+        public GoldenController(IRepository<Golden> service)
         {
             _service = service;
         }

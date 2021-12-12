@@ -42,17 +42,35 @@ namespace SanalBorsaAPI
                     o.MigrationsAssembly("SanalBorsaAPI.Data");
                 });
             });
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IService<>), typeof(Service<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddQuartz(q =>
             {
                 q.UseMicrosoftDependencyInjectionJobFactory();
-                var jobKey = new JobKey("Gold Key");
-                q.AddJob<QuartzCrud>(opts => opts.WithIdentity(jobKey));
+                var goldKey = new JobKey("Gold Key");
+                var crypthoKey = new JobKey("Cryptho Key");
+                var stocksKey = new JobKey("Stocks Key");
+                var exChangeKey = new JobKey("Exchange Key");
+                q.AddJob<QuartzCryptho>(opts => opts.WithIdentity(goldKey));
+                q.AddJob<QuartzGolden>(opts => opts.WithIdentity(crypthoKey));
+                q.AddJob<QuartzStocks>(opts => opts.WithIdentity(stocksKey));
+                q.AddJob<ExChangeQuartz>(opts => opts.WithIdentity(exChangeKey));
                 q.AddTrigger(opts => opts
-                    .ForJob(jobKey)
+                   .ForJob(crypthoKey)
+                   .WithIdentity("Cryptho Key Trigger")
+                   .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                q.AddTrigger(opts => opts
+                  .ForJob(exChangeKey)
+                  .WithIdentity("ExChangeRates Key Trigger")
+                  .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                q.AddTrigger(opts => opts
+                    .ForJob(goldKey)
                     .WithIdentity("Gold Key Trigger")
+                    .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                q.AddTrigger(opts => opts
+                    .ForJob(stocksKey)
+                    .WithIdentity("Stocks Key Trigger")
                     .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
