@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace SanalBorsaAPI.Service.Services
 {
-    public class ExChangeQuartz : IJob
+    public class QuartzExChange : IJob
     {
         private readonly IRepository<ExChangeRates> db;
         public IServiceProvider Services { get; }
-        private readonly ILogger<ExChangeQuartz> _logger;
+        private readonly ILogger<QuartzExChange> _logger;
 
-        public ExChangeQuartz(IRepository<ExChangeRates> _db, IServiceProvider services, ILogger<ExChangeQuartz> logger)
+        public QuartzExChange(IRepository<ExChangeRates> _db, IServiceProvider services, ILogger<QuartzExChange> logger)
         {
             db = _db;
             Services = services;

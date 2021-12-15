@@ -55,7 +55,7 @@ namespace SanalBorsaAPI
                 q.AddJob<QuartzCryptho>(opts => opts.WithIdentity(goldKey));
                 q.AddJob<QuartzGolden>(opts => opts.WithIdentity(crypthoKey));
                 q.AddJob<QuartzStocks>(opts => opts.WithIdentity(stocksKey));
-                q.AddJob<ExChangeQuartz>(opts => opts.WithIdentity(exChangeKey));
+                q.AddJob<QuartzExChange>(opts => opts.WithIdentity(exChangeKey));
                 q.AddTrigger(opts => opts
                    .ForJob(crypthoKey)
                    .WithIdentity("Cryptho Key Trigger")
