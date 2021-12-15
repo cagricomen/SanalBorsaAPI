@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SanalBorsaAPI.Core.Entities;
+using SanalBorsaAPI.Core.PageData;
 using SanalBorsaAPI.Core.Repositories;
-using SanalBorsaAPI.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +20,22 @@ namespace SanalBorsaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public  async Task<IActionResult> GetAll([FromQuery] int page=0)
         {
-            var goldens = await _service.GetAllAsync();
-            return Ok(goldens);
+            var itemCount =  _service.Count();
+            var perPageItem = 10;
+            var currentPage = page;
+            var golds = await _service.GetPerPageItem(currentPage, perPageItem);
+            var pagedResult = new ReturnPagedData<dynamic>();
+            pagedResult.ItemCount = itemCount;
+            pagedResult.PageCount = (int)Math.Ceiling(itemCount / (decimal)perPageItem);
+            pagedResult.CurrentPage = currentPage;
+            pagedResult.Items = new List<dynamic>();
+            foreach (var item in golds)
+            {
+                pagedResult.Items.Add(item);
+            }
+            return Ok(pagedResult);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

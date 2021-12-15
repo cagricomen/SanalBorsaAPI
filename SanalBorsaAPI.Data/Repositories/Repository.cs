@@ -25,7 +25,14 @@ namespace SanalBorsaAPI.Data.Repositories
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
+        public int Count()
+        {
+           return  _context.Set<TEntity>().Count();
+        }
+        public async Task<IEnumerable<TEntity>> GetPerPageItem(int currentPage, int perPageItem)
+        {
+            return await _dbSet.Skip(currentPage * perPageItem ).Take(perPageItem).ToListAsync();   
+        }
         public async Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
@@ -56,6 +63,7 @@ namespace SanalBorsaAPI.Data.Repositories
              _context.SaveChanges();
             return entity;
         }
+
         
     }
 }

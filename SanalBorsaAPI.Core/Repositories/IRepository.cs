@@ -10,7 +10,9 @@ namespace SanalBorsaAPI.Core.Repositories
     public interface IRepository<TEntity> where TEntity:class
     {
         Task<TEntity> GetByIdAsync(int id);
+        int Count();
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetPerPageItem(int currentPage, int perPageItem);
         Task<IEnumerable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task AddAsync(TEntity entity);
