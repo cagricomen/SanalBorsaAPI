@@ -14,11 +14,13 @@ namespace SanalBorsaAPI.Service.Services
     public class QuartzExChange : IJob
     {
         private readonly IRepository<ExChangeRates> db;
+        private readonly IRepository<ExChangeRatesLogs> logRepo;
         public IServiceProvider Services { get; }
         private readonly ILogger<QuartzExChange> _logger;
 
-        public QuartzExChange(IRepository<ExChangeRates> _db, IServiceProvider services, ILogger<QuartzExChange> logger)
+        public QuartzExChange(IRepository<ExChangeRates> _db, IServiceProvider services, ILogger<QuartzExChange> logger, IRepository<ExChangeRatesLogs> _logRepo)
         {
+            logRepo = _logRepo;
             db = _db;
             Services = services;
             _logger = logger;
@@ -96,12 +98,29 @@ namespace SanalBorsaAPI.Service.Services
                     result.LowestPrice = item.LowestPrice;
                     result.Change = item.Change;
                     result.UpdateTime = item.UpdateTime;
-                    _logger.LogInformation($"Güncellenen ExChange elemanı  : {item.Name} ");
+                    db.Update(item);
+                    _logger.LogInformation($"Updated ExChange element: {item.Name} ");
+                    var exChangeLog = new ExChangeRatesLogs
+                    {
+                        CategoryName = "ExChangeRates",
+                        ExChangeRatesId = result.Id,
+                        UpdateTime = DateTime.Now,
+                        Log = $"Updated ExChange element: {item.Name} "
+                    };
+                    await logRepo.AddAsync(exChangeLog);
                 }
                 else
                 {
                     await db.AddAsync(item);
-                    _logger.LogInformation($"Eklenen ExChange elemanı  : {item.Name} ");
+                    _logger.LogInformation($"Added ExChange element: {item.Name} ");
+                    var exChangeLog = new ExChangeRatesLogs
+                    {
+                        CategoryName = "ExChangeRates",
+                        ExChangeRatesId = item.Id,
+                        UpdateTime = DateTime.Now,
+                        Log = $"Added ExChange element: {item.Name} "
+                    };
+                    await logRepo.AddAsync(exChangeLog);
                 }
             }
         }

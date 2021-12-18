@@ -13,14 +13,16 @@ namespace SanalBorsaAPI.Service.Services
     public class QuartzStocks : IJob
     {
         private readonly IRepository<Stocks> db;
+        private readonly IRepository<StocksLogs> logRepo;
         public IServiceProvider Services { get; }
         private readonly ILogger<QuartzStocks> _logger;
 
-        public QuartzStocks(IRepository<Stocks> _db, IServiceProvider services, ILogger<QuartzStocks> logger)
+        public QuartzStocks(IRepository<Stocks> _db, IServiceProvider services, ILogger<QuartzStocks> logger, IRepository<StocksLogs> _logRepo)
         {
             db = _db;
             Services = services;
             _logger = logger;
+            logRepo = _logRepo;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -83,7 +85,7 @@ namespace SanalBorsaAPI.Service.Services
             foreach (var item in stocksList)
             {
                 var result = await db.SingleOrDefaultAsync(x => x.Name == item.Name);
-                if(result != null)
+                if (result != null)
                 {
                     result.LastPrice = item.LastPrice;
                     result.HighestPrice = item.HighestPrice;
@@ -92,12 +94,28 @@ namespace SanalBorsaAPI.Service.Services
                     result.Change = item.Change;
                     result.UpdateTime = item.UpdateTime;
                     db.Update(item);
-                    _logger.LogInformation($"Güncellenen Stocks elemanı  : {item.Name} ");
+                    _logger.LogInformation($"Updated Stocks element  : {item.Name} ");
+                    var stockLog = new StocksLogs
+                    {
+                        CategoryName = "Stocks",
+                        UpdateTime = DateTime.Now,
+                        Log = $"Updated Stocks element  : {item.Name} ",
+                        StocksId = result.Id
+                    };
+                    await logRepo.AddAsync(stockLog);
                 }
                 else
                 {
                     await db.AddAsync(item);
-                    _logger.LogInformation($"Eklenen Stocks elemanı  : {item.Name} ");
+                    _logger.LogInformation($"Added Stocks element  : {item.Name} ");
+                    var stockLog = new StocksLogs
+                    {
+                        CategoryName = "Stocks",
+                        UpdateTime = DateTime.Now,
+                        Log = $"Added Stocks element  : {item.Name} ",
+                        StocksId = item.Id
+                    };
+                    await logRepo.AddAsync(stockLog);
                 }
             }
         }

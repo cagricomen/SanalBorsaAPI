@@ -14,11 +14,13 @@ namespace SanalBorsaAPI.Service.Services
     public class QuartzGolden : IJob
     {
         private readonly IRepository<Golden> db;
+        private readonly IRepository<GoldenLogs> logRepo;
         public IServiceProvider Services { get; }
         private readonly ILogger<QuartzGolden> _logger;
 
-        public QuartzGolden(IRepository<Golden> _db, IServiceProvider services, ILogger<QuartzGolden> logger)
+        public QuartzGolden(IRepository<Golden> _db, IServiceProvider services, ILogger<QuartzGolden> logger, IRepository<GoldenLogs> _logRepo)
         {
+            logRepo = _logRepo;
             db = _db;
             Services = services;
             _logger = logger;
@@ -99,12 +101,30 @@ namespace SanalBorsaAPI.Service.Services
                         result.Change = item.Change;
                         result.UpdateTime = item.UpdateTime;
                         db.Update(item);
-                        _logger.LogInformation($"Güncellenen Golden elemanı  : {item.Name} ");
+                        _logger.LogInformation($"Updated Golden elemanı  : {item.Name} ");
+                        var goldLog = new GoldenLogs
+                        {
+                            CategoryName = "Golden",
+                            GoldenId = result.Id,
+                            UpdateTime = DateTime.Now,
+                            Log = $"Updated Golden element  : {item.Name} "
+
+                        };
+                        await logRepo.AddAsync(goldLog);
                     }
                     else
                     {
                         await db.AddAsync(item);
-                        _logger.LogInformation($"Eklenen Golden elemanı : {item.Name} ");
+                        _logger.LogInformation($"Added Golden element : {item.Name} ");
+                        var goldLog = new GoldenLogs
+                        {
+                            CategoryName = "Golden",
+                            GoldenId = item.Id,
+                            UpdateTime = DateTime.Now,
+                            Log = $"Added Golden element  : {item.Name} "
+
+                        };
+                        await logRepo.AddAsync(goldLog);
                     }
 
                 }

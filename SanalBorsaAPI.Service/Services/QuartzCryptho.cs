@@ -18,10 +18,12 @@ namespace SanalBorsaAPI.Service.Services
     public class QuartzCryptho : IJob
     {
         private readonly IRepository<CryptoCurrency> db;
+        private readonly IRepository<CryptoCurrencyLogs> logRepo;
         public IServiceProvider Services { get; }
         private readonly ILogger<QuartzCryptho> _logger;
-        public QuartzCryptho(IServiceProvider services, ILogger<QuartzCryptho> logger, IRepository<CryptoCurrency> _db )
+        public QuartzCryptho(IServiceProvider services, ILogger<QuartzCryptho> logger, IRepository<CryptoCurrency> _db, IRepository<CryptoCurrencyLogs> _logRepo)
         {
+            logRepo = _logRepo;
             db = _db;
             _logger = logger;
             Services = services;
@@ -29,7 +31,6 @@ namespace SanalBorsaAPI.Service.Services
 
         public async  Task Execute(IJobExecutionContext context)
         {
-            // Golden();
             var cryptoList = new List<CryptoCurrency>();
             var cryptoAdress = "https://www.doviz.com/kripto-paralar";
             var hweb = new HtmlWeb();
@@ -49,7 +50,8 @@ namespace SanalBorsaAPI.Service.Services
                         {
                             var aElement = tdData.Element("a");
                             var sName = aElement.GetDirectInnerText().Trim();
-                            crpyto.Name = sName;
+                            crpyto.ShortName = sName.Split('-').First();
+                            crpyto.Name = sName.Split("-").Last();
                             var imgElement = aElement.Element("img");
                             HtmlAttribute src = imgElement.Attributes["src"];
                             crpyto.ImgPath = src.Value;
@@ -106,14 +108,30 @@ namespace SanalBorsaAPI.Service.Services
                     result.UpdateTime = item.UpdateTime;
                     result.ImgPath = item.ImgPath;
                     db.Update(item);
-                    _logger.LogInformation($"Güncellenen Crypto elemanı : {item.Name} ");
+                    _logger.LogInformation($"Updated Crypto element : {item.Name} ");
+                    var cryptoLog = new CryptoCurrencyLogs
+                    {
+                        CategoryName = "CryptoCurrency",
+                        CrypthoId = result.Id,
+                        UpdateTime = DateTime.Now,
+                        Log = $"Updated Crypto element : {item.Name} "
+                    };
+                    await logRepo.AddAsync(cryptoLog);
                 }
                 else
                 {
                     if (!item.Name.Equals("-"))
                     {
                         await db.AddAsync(item);
-                        _logger.LogInformation($"Eklenen Crypto elemanı : {item.Name} ");
+                        _logger.LogInformation($"Added Crypto element : {item.Name} ");
+                        var cryptoLog = new CryptoCurrencyLogs
+                        {
+                            CategoryName = "CryptoCurrency",
+                            CrypthoId = item.Id,
+                            UpdateTime = DateTime.Now,
+                            Log = $"Added Crypto element : {item.Name} "
+                        };
+                        await logRepo.AddAsync(cryptoLog);
                     }
                 }
             }
