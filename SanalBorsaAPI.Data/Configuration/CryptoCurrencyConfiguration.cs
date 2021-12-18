@@ -20,4 +20,12 @@ namespace SanalBorsaAPI.Data.Configuration
             builder.Property(x => x.BuyPriceTL).HasColumnType("decimal(20,4)");
         }
     }
+    public class CryptoCurrencyLogsConfiguration : IEntityTypeConfiguration<CryptoCurrencyLogs>
+    {
+        public void Configure(EntityTypeBuilder<CryptoCurrencyLogs> builder)
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).UseIdentityColumn();
+        }
+    }
 }

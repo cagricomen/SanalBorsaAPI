@@ -18,6 +18,10 @@ namespace SanalBorsaAPI.Data
         public DbSet<CryptoCurrency> CryptoCurrencies { get; set; }
         public DbSet<ExChangeRates> ExChangeRates { get; set; }
         public DbSet<Stocks> Stocks { get; set; }
+        public DbSet<GoldenLogs> GoldenLogs { get; set; }
+        public DbSet<CryptoCurrencyLogs> CryptoCurrencyLogs { get; set; }
+        public DbSet<ExChangeRatesLogs> ExChangeRatesLogs { get; set; }
+        public DbSet<StocksLogs> StocksLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +29,10 @@ namespace SanalBorsaAPI.Data
             modelBuilder.ApplyConfiguration(new CryptoCurrencyConfiguration());
             modelBuilder.ApplyConfiguration(new ExChangeRatesConfiguration());
             modelBuilder.ApplyConfiguration(new StocksConfiguration());
+            modelBuilder.ApplyConfiguration(new StocksLogsConfiguration());
+            modelBuilder.ApplyConfiguration(new GoldenLogsConfiguration());
+            modelBuilder.ApplyConfiguration(new ExChangeRatesLogsConfiguration());
+            modelBuilder.ApplyConfiguration(new CryptoCurrencyLogsConfiguration());
         }
     }
 }

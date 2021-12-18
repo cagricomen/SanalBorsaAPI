@@ -22,4 +22,12 @@ namespace SanalBorsaAPI.Data.Configuration
 
         }
     }
+    public class GoldenLogsConfiguration : IEntityTypeConfiguration<GoldenLogs>
+    {
+        public void Configure(EntityTypeBuilder<GoldenLogs> builder)
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).UseIdentityColumn();
+        }
+    }
 }

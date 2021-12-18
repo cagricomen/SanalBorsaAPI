@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Quartz;
 using SanalBorsaAPI.Core.Repositories;
@@ -59,19 +56,19 @@ namespace SanalBorsaAPI
                 q.AddTrigger(opts => opts
                    .ForJob(crypthoKey)
                    .WithIdentity("Cryptho Key Trigger")
-                   .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                   .WithCronSchedule("0 0/3 * * * ?")); //every day every 3 minute
                 q.AddTrigger(opts => opts
                   .ForJob(exChangeKey)
                   .WithIdentity("ExChangeRates Key Trigger")
-                  .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                  .WithCronSchedule("0 0/5 * * * ?")); //every day every 5 minute
                 q.AddTrigger(opts => opts
                     .ForJob(goldKey)
                     .WithIdentity("Gold Key Trigger")
-                    .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                    .WithCronSchedule("0 0/7 * * * ?")); //every day every 7 minute
                 q.AddTrigger(opts => opts
                     .ForJob(stocksKey)
                     .WithIdentity("Stocks Key Trigger")
-                    .WithCronSchedule("0 0/1 * * * ?")); //every day every 1 minute
+                    .WithCronSchedule("0 0/9 * * * ?")); //every day every 9 minute
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddControllers();

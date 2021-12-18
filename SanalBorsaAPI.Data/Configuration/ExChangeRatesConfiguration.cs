@@ -22,4 +22,12 @@ namespace SanalBorsaAPI.Data.Configuration
             builder.Property(x => x.LowestPrice).HasColumnType("decimal(20,4)");
         }
     }
+    public class ExChangeRatesLogsConfiguration : IEntityTypeConfiguration<ExChangeRatesLogs>
+    {
+        public void Configure(EntityTypeBuilder<ExChangeRatesLogs> builder)
+        {
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).UseIdentityColumn();
+        }
+    }
 }
