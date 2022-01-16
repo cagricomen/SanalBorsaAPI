@@ -61,13 +61,13 @@ namespace SanalBorsaAPI.Service.Services
                         {
                             var sName = tdData.GetDirectInnerText().Trim();
                             var changee = sName.Substring(1, sName.Length - 1);
-                            crpyto.BuyPriceDolar = Decimal.Parse(changee);
+                            crpyto.BuyPriceDolar = float.Parse(changee);
                         }
                         if (i == 2)
                         {
                             var sName = tdData.GetDirectInnerText().Trim();
                             var changee = sName.Substring(1, sName.Length - 1);
-                            crpyto.BuyPriceTL = Decimal.Parse(changee);
+                            crpyto.BuyPriceTL = float.Parse(changee);
                         }
                         if (i == 3)
                         {

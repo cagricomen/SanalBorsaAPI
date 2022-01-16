@@ -62,18 +62,18 @@ namespace SanalBorsaAPI.Service.Services
                             var sss = tdData.GetDirectInnerText().Trim();
                             if (sss.Contains('$'))
                             {
-                                golden.BuyPrice = Decimal.Parse(sss.Substring(1));
+                                golden.BuyPrice = float.Parse(sss.Substring(1));
                             }
-                            else golden.BuyPrice = Decimal.Parse(sss);
+                            else golden.BuyPrice = float.Parse(sss);
                         }
                         if (i == 2)
                         {
                             var sss = tdData.GetDirectInnerText().Trim();
                             if (sss.Contains('$'))
                             {
-                                golden.SalePrice = Decimal.Parse(sss.Substring(1));
+                                golden.SalePrice = float.Parse(sss.Substring(1));
                             }
-                            else golden.SalePrice = Decimal.Parse(sss);
+                            else golden.SalePrice = float.Parse(sss);
                         }
                         if (i == 3)
                         {

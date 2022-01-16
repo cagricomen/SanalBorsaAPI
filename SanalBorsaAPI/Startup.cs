@@ -13,10 +13,6 @@ using SanalBorsaAPI.Data;
 using SanalBorsaAPI.Data.Repositories;
 using SanalBorsaAPI.Data.UnitOfWorks;
 using SanalBorsaAPI.Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SanalBorsaAPI
 {
@@ -29,6 +25,8 @@ namespace SanalBorsaAPI
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,6 +36,17 @@ namespace SanalBorsaAPI
                 {
                     o.MigrationsAssembly("SanalBorsaAPI.Data");
                 });
+            });
+                        
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyHeader()
+                                             .AllowAnyMethod()
+                                             .AllowAnyOrigin();
+                                  });
             });
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IService<>), typeof(Service<>));
@@ -56,19 +65,19 @@ namespace SanalBorsaAPI
                 q.AddTrigger(opts => opts
                    .ForJob(crypthoKey)
                    .WithIdentity("Cryptho Key Trigger")
-                   .WithCronSchedule("0 0/3 * * * ?")); //every day every 3 minute
+                   .WithCronSchedule("0 0/5 * * * ?")); //every day every 3 minute
                 q.AddTrigger(opts => opts
                   .ForJob(exChangeKey)
                   .WithIdentity("ExChangeRates Key Trigger")
-                  .WithCronSchedule("0 0/5 * * * ?")); //every day every 5 minute
+                  .WithCronSchedule("0 0/1 * * * ?")); //every day every 5 minute
                 q.AddTrigger(opts => opts
                     .ForJob(goldKey)
                     .WithIdentity("Gold Key Trigger")
-                    .WithCronSchedule("0 0/7 * * * ?")); //every day every 7 minute
+                    .WithCronSchedule("0 0/9 * * * ?")); //every day every 7 minute
                 q.AddTrigger(opts => opts
                     .ForJob(stocksKey)
                     .WithIdentity("Stocks Key Trigger")
-                    .WithCronSchedule("0 0/9 * * * ?")); //every day every 9 minute
+                    .WithCronSchedule("0 0/11 * * * ?")); //every day every 9 minute
             });
             services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
             services.AddControllers();
@@ -91,6 +100,9 @@ namespace SanalBorsaAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+          
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

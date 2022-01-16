@@ -16,8 +16,6 @@ namespace SanalBorsaAPI.Data.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).IsRequired();
-            builder.Property(x => x.BuyPriceDolar).HasColumnType("decimal(20,4)");
-            builder.Property(x => x.BuyPriceTL).HasColumnType("decimal(20,4)");
         }
     }
     public class CryptoCurrencyLogsConfiguration : IEntityTypeConfiguration<CryptoCurrencyLogs>

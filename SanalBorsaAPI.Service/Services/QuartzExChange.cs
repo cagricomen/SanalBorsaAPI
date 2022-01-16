@@ -51,24 +51,32 @@ namespace SanalBorsaAPI.Service.Services
                         {
                             var aElement = tdData.Element("a");
                             var sName = aElement.GetDirectInnerText().Trim();
-                            changeRates.ShortName = sName.Substring(0, 2).ToLower();
+                            var shortName = sName.Substring(0, 2).ToLower();
+                            if(shortName.First() == 'ı')
+                            {
+                                var chars = shortName.ToCharArray();
+                                chars[0] = 'i';
+                                string name = new(chars);
+                                changeRates.ShortName = name;
+                            }
+                            else changeRates.ShortName = shortName;
                             changeRates.Name = sName.Substring(5).Trim();
                         }
                         if (i == 1)
                         {
-                            changeRates.BuyPrice = Decimal.Parse(tdData.GetDirectInnerText());
+                            changeRates.BuyPrice = float.Parse(tdData.GetDirectInnerText());
                         }
                         if (i == 2)
                         {
-                            changeRates.SalePrice = Decimal.Parse(tdData.GetDirectInnerText());
+                            changeRates.SalePrice = float.Parse(tdData.GetDirectInnerText());
                         }
                         if (i == 3)
                         {
-                            changeRates.HighestPrice = Decimal.Parse(tdData.GetDirectInnerText());
+                            changeRates.HighestPrice = float.Parse(tdData.GetDirectInnerText());
                         }
                         if (i == 4)
                         {
-                            changeRates.LowestPrice = Decimal.Parse(tdData.GetDirectInnerText());
+                            changeRates.LowestPrice = float.Parse(tdData.GetDirectInnerText());
                         }
                         if (i == 5)
                         {

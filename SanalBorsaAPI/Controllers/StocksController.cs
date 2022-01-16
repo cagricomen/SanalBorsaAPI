@@ -23,7 +23,7 @@ namespace SanalBorsaAPI.Controllers
         public async Task<IActionResult> GetAll([FromQuery] int page = 0)
         {
             var itemCount = _service.Count();
-            var perPageItem = 20;
+            var perPageItem = 10;
             var currentPage = page;
             var golds = await _service.GetPerPageItem(currentPage, perPageItem);
             var pagedResult = new ReturnPagedData<dynamic>();
@@ -35,7 +35,7 @@ namespace SanalBorsaAPI.Controllers
             {
                 pagedResult.Items.Add(item);
             }
-            return Ok(pagedResult);
+            return Ok(pagedResult.Items);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

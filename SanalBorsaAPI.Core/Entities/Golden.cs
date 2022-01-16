@@ -10,8 +10,8 @@ namespace SanalBorsaAPI.Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal BuyPrice { get; set; }
-        public decimal SalePrice { get; set; }
+        public float BuyPrice { get; set; }
+        public float SalePrice { get; set; }
         public decimal Change { get; set; }
         public DateTime UpdateTime { get; set; }
     }

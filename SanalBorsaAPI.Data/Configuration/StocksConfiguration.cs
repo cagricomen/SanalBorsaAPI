@@ -16,9 +16,6 @@ namespace SanalBorsaAPI.Data.Configuration
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Name).IsRequired();
-            builder.Property(x => x.LastPrice).HasColumnType("decimal(20,2)");
-            builder.Property(x => x.HighestPrice).HasColumnType("decimal(20,2)");
-            builder.Property(x => x.LowestPrice).HasColumnType("decimal(20,2)");
         }
     }
     public class StocksLogsConfiguration : IEntityTypeConfiguration<StocksLogs>

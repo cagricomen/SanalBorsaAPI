@@ -51,15 +51,15 @@ namespace SanalBorsaAPI.Service.Services
                         }
                         if (i == 1)
                         {
-                            stock.LastPrice = decimal.Parse(tdData.GetDirectInnerText().Trim());
+                            stock.LastPrice = float.Parse(tdData.GetDirectInnerText().Trim());
                         }
                         if (i == 2)
                         {
-                            stock.HighestPrice = decimal.Parse(tdData.GetDirectInnerText().Trim());
+                            stock.HighestPrice = float.Parse(tdData.GetDirectInnerText().Trim());
                         }
                         if (i == 3)
                         {
-                            stock.LowestPrice = decimal.Parse(tdData.GetDirectInnerText().Trim());
+                            stock.LowestPrice = float.Parse(tdData.GetDirectInnerText().Trim());
                         }
                         if (i == 4)
                         {
